@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h3>List your item</h3>
+
+<form action="{% url 'createListing' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <input autofocus class="form-control" type="text" name="name" placeholder="name of the item">
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="text" name="price" placeholder="starting price">
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="text" name="imageUrl" placeholder="url of the item image">
+    </div>
+    <div class="form-group">
+        <label for="categories">choose a category:</label>
+
+        <select class="form-control" name="categories" id="categories">
+            <option value="todo">todo</option>
+        </select>
+    </div>
+    <input class="btn btn-primary" type="submit" value="Add">
+</form>
+
+{% endblock %}
