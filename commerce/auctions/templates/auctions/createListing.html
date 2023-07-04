@@ -6,22 +6,31 @@
 <form action="{% url 'createListing' %}" method="post">
     {% csrf_token %}
     <div class="form-group">
-        <input autofocus class="form-control" type="text" name="name" placeholder="name of the item">
+        <label for="id_name">Name:</label>
+        <input autofocus class="form-control" type="text" id="id_name" name="name" placeholder="name of the item"
+            required>
     </div>
     <div class="form-group">
-        <input class="form-control" type="text" name="price" placeholder="starting price">
+        <label for="id_price">Price:</label>
+        <input class="form-control" type="number" id="id_price" name="price" placeholder="starting price" required>
     </div>
     <div class="form-group">
-        <input class="form-control" type="text" name="imageUrl" placeholder="url of the item image">
+        <label for="id_description">Description:</label>
+        <textarea id="id_description" name="description" class="form-control" required></textarea>
     </div>
     <div class="form-group">
-        <label for="categories">choose a category:</label>
-
-        <select class="form-control" name="categories" id="categories">
-            <option value="todo">todo</option>
+        <label for="id_imgurl">Image Url:</label>
+        <input class="form-control" id="id_imgurl" type="text" name="image" placeholder="url of the item image"
+            required>
+    </div>
+    <div class="form-group">
+        <label for="id_categories">choose a category:</label>
+        <select class="form-control" name="category" id="id_categories">
+            <option value="mobile">mobile</option>
+            <option value="laptop">laptop</option>
         </select>
     </div>
-    <input class="btn btn-primary" type="submit" value="Add">
+    <button type="submit" class="btn btn-primary">Create</button>
 </form>
 
 {% endblock %}

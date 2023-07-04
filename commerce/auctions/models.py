@@ -30,7 +30,7 @@ class AuctionListing(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, blank=True, null=True, related_name="category")
 
-    date_time = models.DateTimeField(auto_now_add=True)
+    date_time = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -41,4 +41,4 @@ class Bids(models.Model):
 
 
 class Comments(models.Model):
-    comment = models.TextField()
+    comment = models.TextField(null=True)

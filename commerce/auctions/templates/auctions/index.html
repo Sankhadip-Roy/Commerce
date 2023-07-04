@@ -1,7 +1,21 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-
-    TODO
+<h2>Active Listings</h2>
+{% for auction in auctionlistings %}
+<div class="auction">
+    <div>
+        <img width="300px" height="300px" src="{{auction.image}}">
+    </div>
+    <div>
+        <h5><strong>{{auction.name}}</strong> </h5>
+        <h5><b>Price:</b> ₹{{auction.price}}</h5>
+        <h5>{{auction.description}}</h5>
+        <h5><b>Category:</b> {{auction.category}}</h5>
+        <p><small>Created: {{auction.date_time}}</small>
+        <p>
+            <hr><br>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}

@@ -3,9 +3,9 @@
 {% block body %}
 <h3>Categories</h3>
 
-TODO
-<form action="{% url 'categories' %}" method="get">
-
-</form>
-
+{% for category in categories %}
+<div>
+    <h5><a href="#">{{category.categoryName}}</a></h5>
+</div>
+{% endfor %}
 {% endblock %}
