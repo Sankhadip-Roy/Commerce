@@ -1,0 +1,22 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+<h3>Category: {{ category.categoryName }}</h3>
+<hr>
+{% for product in products %}
+<div>
+    <img height="300px" src="{{product.image}}">
+</div>
+<div>
+    <h5><strong>{{product.name}}</strong> </h5>
+    <h5><b>Price:</b> ₹{{product.price}}</h5>
+    <h5>{{product.description}}</h5>
+    <h5><b>Category:</b> {{product.category}}</h5>
+    <p><small>Created: {{product.date_time}}</small>
+    <p>
+        <hr><br>
+</div>
+{% empty %}
+<p>No products available in this category.</p>
+{% endfor %}
+{% endblock %}

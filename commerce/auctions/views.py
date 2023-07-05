@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from .models import User, AuctionListing, Category
@@ -89,3 +89,12 @@ def watchlist(request):
 def categories(request):
     context = {'categories':Category.objects.all()}
     return render(request, "auctions/categories.html",context)
+
+def products_by_category(request, category_name):
+    category = get_object_or_404(Category, categoryName=category_name)
+    products=AuctionListing.objects.filter(category=category)
+    context = {
+        'category': category,
+        'products': products
+    }
+    return render(request, 'auctions/products_by_category.html', context)
