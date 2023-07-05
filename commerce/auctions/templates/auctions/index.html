@@ -3,7 +3,8 @@
 {% block body %}
 <h2>Active Listings</h2>
 {% for auction in auctionlistings %}
-<div class="auction">
+<div class="auction"
+    style="display: flex; gap: 15px; justify-content: left; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: left;">
     <div>
         <img height="250px" src="{{auction.image}}">
     </div>
@@ -14,8 +15,8 @@
         <h5><b>Category:</b> {{auction.category}}</h5>
         <p><small>Created: {{auction.date_time}}</small>
         <p>
-            <hr><br>
     </div>
 </div>
+<hr><br>
 {% endfor %}
 {% endblock %}
