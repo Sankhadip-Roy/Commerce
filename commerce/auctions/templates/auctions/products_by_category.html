@@ -4,13 +4,13 @@
 <h3>Category: {{ category.categoryName }}</h3>
 <hr>
 {% for product in products %}
-<div class="auction"
-    style="display: flex; justify-content: center; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+<div class="container-fluid card" style="display: flex; gap: 20px; flex-direction: row; align-items: center;">
     <div>
-        <img height="250px" src="{{product.image}}">
+        <img class="bd-placeholder-img card-img-left" height="150vh" src="{{product.image}}">
     </div>
     <div>
-        <h5><strong>{{product.name}}</strong> </h5>
+        <h5><a class="stretched-link"
+                href="{% url 'item_details' item_name=product.name %}"><strong>{{product.name}}</strong></a></h5>
         <h5><b>Price:</b> ₹{{product.price}}</h5>
         <h5>{{product.description}}</h5>
         <h5><b>Category:</b> {{product.category}}</h5>

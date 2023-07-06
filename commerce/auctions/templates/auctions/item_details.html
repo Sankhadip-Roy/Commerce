@@ -1,0 +1,32 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+<h3>Listing: {{item_name}}</h3>
+<hr>
+<div class="auction container-fluid"
+    style="display: flex; gap: 20px; flex-direction: row; flex-wrap: wrap; align-items: center;">
+    <div>
+        <img height="250px" src="{{item.image}}">
+    </div>
+    <div>
+        <h5>{{item.description}}</h5>
+        <h4><strong> ₹&nbsp;{{item.price}}</strong></h4><br>
+        <p><small>#todo no of bid & current bid</small></p>
+        <div class="form-group">
+            <input autofocus class="form-control" type="number" name="bid" placeholder="Bid" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Place Bid</button>
+        <h5 style="margin: 10px;"><strong>Details</strong></h5>
+        <ul>
+            <li>
+                Category: {{item.category}}
+            </li>
+            <li>
+                <small>Created: {{item.date_time}}</small>
+            </li>
+        </ul>
+
+
+    </div>
+</div>
+{% endblock %}

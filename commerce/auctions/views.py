@@ -98,3 +98,11 @@ def products_by_category(request, category_name):
         'products': products
     }
     return render(request, 'auctions/products_by_category.html', context)
+
+def item_details(request, item_name):
+    item = get_object_or_404(AuctionListing, name=item_name)
+    context = {
+        'item_name': item_name,
+        'item': item
+    }
+    return render(request, 'auctions/item_details.html', context)

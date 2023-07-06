@@ -1,22 +1,21 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<h2>Active Listings</h2>
+<h2>Active Listings</h2><br>
 {% for auction in auctionlistings %}
-<div class="auction"
-    style="display: flex; gap: 15px; justify-content: left; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: left;">
+<div class="container-fluid card" style="display: flex; gap: 20px; flex-direction: row; align-items: center;">
     <div>
-        <img height="250px" src="{{auction.image}}">
+        <img class="bd-placeholder-img card-img-left" height="150vh" src="{{auction.image}}">
     </div>
     <div>
-        <h5><strong>{{auction.name}}</strong> </h5>
+        <h5><a class="stretched-link"
+                href="{% url 'item_details' item_name=auction.name %}"><strong>{{auction.name}}</strong></a>
+        </h5>
         <h5><b>Price:</b> ₹{{auction.price}}</h5>
         <h5>{{auction.description}}</h5>
-        <h5><b>Category:</b> {{auction.category}}</h5>
         <p><small>Created: {{auction.date_time}}</small>
         <p>
     </div>
-</div>
-<hr><br>
+</div><br>
 {% endfor %}
 {% endblock %}
