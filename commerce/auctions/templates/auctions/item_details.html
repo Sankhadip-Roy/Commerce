@@ -12,21 +12,39 @@
         <h5>{{item.description}}</h5>
         <h4><strong> ₹&nbsp;{{item.price}}</strong></h4><br>
         <p><small>#todo no of bid & current bid</small></p>
-        <div class="form-group">
-            <input autofocus class="form-control" type="number" name="bid" placeholder="Bid" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Place Bid</button>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input autofocus class="form-control" type="number" name="bid" placeholder="Bid" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Place Bid</button>
+        </form>
         <h5 style="margin: 10px;"><strong>Details</strong></h5>
         <ul>
             <li>
-                Category: {{item.category}}
+                Listed by: {{item.Owner}}
+            </li>
+            <li>Category:
+                {% if item.category == None %}
+                No Category Listed
+                {% else %}
+                {{item.category}}
+                {% endif %}
             </li>
             <li>
                 <small>Created: {{item.date_time}}</small>
             </li>
         </ul>
-
-
+    </div>
+    <div>
+        <h5 style="margin: 10px;"><strong>Comments:</strong></h5>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input class="form-control" type="text" name="comment" placeholder="Add a comment" required>
+            </div>
+            <button type="submit" class="btn-sm btn-primary">Comment</button>
+        </form>
     </div>
 </div>
 {% endblock %}

@@ -106,3 +106,9 @@ def item_details(request, item_name):
         'item': item
     }
     return render(request, 'auctions/item_details.html', context)
+
+def bid(request):
+    pass
+
+def comment(request):
+    pass
