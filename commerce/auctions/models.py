@@ -15,11 +15,8 @@ class Category(models.Model):
 
 class AuctionListing(models.Model):
     name = models.CharField(max_length=100)
-
     price = models.DecimalField(max_digits=10, decimal_places=2)
-
     description = models.TextField()
-
     image = models.URLField(max_length=200)
 
     isActive = models.BooleanField(default=True)
@@ -32,12 +29,17 @@ class AuctionListing(models.Model):
 
     date_time = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
+    highest_bid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    highest_bidder = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
     def __str__(self):
         return self.name
 
 
 class Bids(models.Model):
-    pass
+    listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, blank=True, null=True)
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
 
 class Comments(models.Model):

@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import User, AuctionListing, Category, Comments
-from .forms import CommentForm
+from .models import User, AuctionListing, Category, Comments, Bids
+from .forms import CommentForm, BidForm
 
 
 def index(request):
@@ -103,7 +103,31 @@ def products_by_category(request, category_name):
 
 def item_details(request, item_id):
     item = AuctionListing.objects.get(id = item_id)
-    
+
+    #for bid
+    bids = Bids.objects.filter(listing=item).order_by('-amount')
+    highest_bid = item.highest_bid
+    highest_bidder = item.highest_bidder
+    if request.method == 'POST':
+        form = BidForm(request.POST)
+        if form.is_valid():
+            bid_amount = form.cleaned_data['amount']
+
+            if bid_amount > highest_bid:
+                # Update the highest bid and bidder
+                item.highest_bid = bid_amount
+                item.highest_bidder = request.user
+                item.save()
+
+                # Create a new bid
+                bid = Bids(listing=item, bidder=request.user, amount=bid_amount)
+                bid.save()
+
+                # Refresh the page to show the updated bid information
+                return HttpResponseRedirect(request.path_info)
+    else:
+        bid_form = BidForm()
+
     if request.method == "POST":
             comment = CommentForm(request.POST)
             if comment.is_valid():
@@ -113,13 +137,17 @@ def item_details(request, item_id):
     all_comments = Comments.objects.filter(product = item)
     context = {
         'item': item,
-        "your_comment" : your_comment,
-        'all_comments':all_comments
+        'your_comment' : your_comment,
+        'all_comments':all_comments,
+        'bids': bids,
+        'highest_bid': highest_bid,
+        'highest_bidder': highest_bidder,
+        'bid_form': bid_form
     }
     return render(request, 'auctions/item_details.html', context)
 
-def bid(request):
-    pass
+# def bid(request):
+#     pass
 
 @login_required
 def save_comment(request, content, product):

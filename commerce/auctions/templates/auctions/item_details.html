@@ -10,14 +10,26 @@
     <div>
         <h5>{{item.description}}</h5>
         <h4><strong> ₹&nbsp;{{item.price}}</strong></h4><br>
-        <p><small>#todo no of bid & current bid</small></p>
-        <form action="" method="post">
+
+
+        <p>Bid History: </p>
+        <ul>
+            {% for bid in bids %}
+            <li>{{ bid.amount }} - {{ bid.bidder.username }}</li>
+            {% empty %}
+            <li>No bids yet.</li>
+            {% endfor %}
+        </ul>
+
+        <p>Highest bid: {{ highest_bid }}. Highest bidder: {{ highest_bidder }}</p>
+        <h5>Place a Bid:</h5>
+        <form method="post">
             {% csrf_token %}
-            <div class="form-group">
-                <input autofocus class="form-control" type="number" name="bid" placeholder="Bid" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Place Bid</button>
+            {{ bid_form }}
+            <button type="submit" class="btn-sm btn-primary">Place Bid</button>
         </form>
+
+
         <h5 style="margin: 10px;"><strong>Details</strong></h5>
         <ul>
             <li>
