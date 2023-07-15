@@ -41,4 +41,6 @@ class Bids(models.Model):
 
 
 class Comments(models.Model):
-    comment = models.TextField(null=True)
+    comment = models.CharField(max_length=300, blank=True, null=True)
+    commentator = models.ForeignKey('User', on_delete=models.CASCADE, blank=True, null=True)
+    product = models.ForeignKey('AuctionListing', on_delete=models.CASCADE, blank=True, null=True)

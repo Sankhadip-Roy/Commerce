@@ -3,12 +3,14 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
-from .models import User, AuctionListing, Category
+from .models import User, AuctionListing, Category, Comments
+from .forms import CommentForm
 
 
 def index(request):
-    context = {'auctionlistings':AuctionListing.objects.all()}
+    context = {'items':AuctionListing.objects.all()}
     return render(request, "auctions/index.html", context)
 
 
@@ -92,23 +94,35 @@ def categories(request):
 
 def products_by_category(request, category_name):
     category = get_object_or_404(Category, categoryName=category_name)
-    products=AuctionListing.objects.filter(category=category)
+    items=AuctionListing.objects.filter(category=category)
     context = {
         'category': category,
-        'products': products
+        'items': items
     }
     return render(request, 'auctions/products_by_category.html', context)
 
-def item_details(request, item_name):
-    item = get_object_or_404(AuctionListing, name=item_name)
+def item_details(request, item_id):
+    item = AuctionListing.objects.get(id = item_id)
+    
+    if request.method == "POST":
+            comment = CommentForm(request.POST)
+            if comment.is_valid():
+                save_comment(request, comment.cleaned_data['comment'], item)
+
+    your_comment = CommentForm()
+    all_comments = Comments.objects.filter(product = item)
     context = {
-        'item_name': item_name,
-        'item': item
+        'item': item,
+        "your_comment" : your_comment,
+        'all_comments':all_comments
     }
     return render(request, 'auctions/item_details.html', context)
 
 def bid(request):
     pass
 
-def comment(request):
-    pass
+@login_required
+def save_comment(request, content, product):
+    commentator = User.objects.get(username = request.user.username)
+    comment = Comments(comment=content, commentator=commentator, product=product)
+    comment.save()

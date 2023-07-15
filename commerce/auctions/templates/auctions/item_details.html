@@ -1,7 +1,7 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-<h3>Listing: {{item_name}}</h3>
+<h3>Listing: {{item.name}}</h3>
 <hr>
 <div class="single_item container-fluid">
     <div>
@@ -36,14 +36,20 @@
         </ul>
     </div>
     <div>
-        <h5 style="margin: 10px;"><strong>Comments:</strong></h5>
-        <form action="" method="post">
+        {% if user.is_authenticated %}
+        <form action="{% url 'item_details' item_id=item.id %}" method="post">
             {% csrf_token %}
-            <div class="form-group">
-                <input class="form-control" type="text" name="comment" placeholder="Add a comment" required>
-            </div>
+            {{ your_comment }}
             <button type="submit" class="btn-sm btn-primary">Comment</button>
         </form>
+        {% else %}
+        <a class="nav-link" href="{% url 'login' %}"><strong>sign in to comment</strong></a>
+        {% endif %}
+        <h5 style="margin: 10px;"><strong>Comments:</strong></h5>
+        {% for comment in all_comments %}
+        <p><strong>{{ comment.commentator.username }}</strong> : {{ comment.comment }}</p>
+        {% endfor %}
+
     </div>
 </div>
 {% endblock %}
