@@ -5,27 +5,24 @@
 
 <form action="{% url 'createListing' %}" method="post">
     {% csrf_token %}
-    <div class="form-group">
-        <label for="id_name">Name:</label>
+    <div class="input-group mb-3">
         <input autofocus class="form-control" type="text" id="id_name" name="name" placeholder="name of the item"
             required>
     </div>
-    <div class="form-group">
-        <label for="id_price">Price:</label>
+    <div class="input-group mb-3">
         <input class="form-control" type="number" id="id_price" name="price" placeholder="starting bid" required>
     </div>
-    <div class="form-group">
-        <label for="id_description">Description:</label>
-        <textarea id="id_description" name="description" class="form-control" required></textarea>
+    <div class="input-group mb-3">
+        <textarea id="id_description" name="description" class="form-control" placeholder="Description"
+            required></textarea>
     </div>
-    <div class="form-group">
-        <label for="id_imgurl">Image Url:</label>
+    <div class="input-group mb-3">
         <input class="form-control" id="id_imgurl" type="text" name="image" placeholder="url of the item image"
             required>
     </div>
-    <div class="form-group">
-        <label for="id_category">Category:</label>
-        <select class="form-control" name="category" id="id_category">
+    <div class="input-group mb-3">
+        <select class="form-control" name="category" id="id_category" placeholder="category">
+            <option disabled selected value="">Category</option>
             {% for category in categories %}
             <option value="{{ category.id }}">{{ category.categoryName }}</option>
             {% endfor %}

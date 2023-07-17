@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-
 class User(AbstractUser):
     pass
 
@@ -11,7 +10,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.categoryName
-
 
 class AuctionListing(models.Model):
     name = models.CharField(max_length=100)
@@ -40,9 +38,20 @@ class Bids(models.Model):
     listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, blank=True, null=True)
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    def __str__(self):
+        return f"{self.listing} | {self.bidder} | {self.amount}"
 
 
 class Comments(models.Model):
     comment = models.CharField(max_length=300, blank=True, null=True)
     commentator = models.ForeignKey('User', on_delete=models.CASCADE, blank=True, null=True)
     product = models.ForeignKey('AuctionListing', on_delete=models.CASCADE, blank=True, null=True)
+    def __str__(self):
+        return f"{self.product} | {self.commentator}"
+
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, blank=True, null=True)
+    def __str__(self):
+        return f"{self.user.username} | {self.listing.name}"

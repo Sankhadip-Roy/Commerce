@@ -8,9 +8,17 @@
         <img class="bd-placeholder-img card-img-left" height="150vh" src="{{item.image}}">
     </div>
     <div>
-        <h5><a class="stretched-link" href="{% url 'item_details' item_id=item.id %}"><strong>{{item.name}}</strong></a>
-        </h5>
-        <h5><b>Price:</b> ₹{{item.price}}</h5>
+        <h6><a class="nav-link stretched-link"
+                href="{% url 'item_details' item_id=item.id %}"><strong>{{item.name}}</strong></a>
+        </h6>
+
+        {% if item.highest_bid is None %}
+        <h5><b>Price:</b> ₹&nbsp;{{item.price}}<small><small> initial
+                    price</small></small></h5>
+        {% else %}
+        <h5><b>Price:</b> ₹&nbsp;{{item.highest_bid}}</h5>
+        {% endif %}
+
         <h5>{{item.description}}</h5>
         <p><small>Created: {{item.date_time}}</small>
         <p>

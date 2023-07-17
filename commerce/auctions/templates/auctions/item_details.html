@@ -1,7 +1,12 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-<h3>Listing: {{item.name}}</h3>
+<h3 class="text-left">Listing: {{item.name}}</h3>
+{% if item.isActive %}
+<span class="badge text-bg-success">active</span>
+{% else %}
+<span class="badge text-bg-warning">closed</span>
+{% endif %}
 <hr>
 <div class="single_item container-fluid">
     <div>
@@ -9,8 +14,13 @@
     </div>
     <div>
         <h5>{{item.description}}</h5>
-        <h4><strong> ₹&nbsp;{{item.price}}</strong></h4><br>
 
+        {% if highest_bid is None %}
+        <h4><strong> ₹&nbsp;{{item.price}}</strong><small><small> initial
+                    price</small></small></h4><br>
+        {% else %}
+        <h4><strong> ₹&nbsp;{{highest_bid}}</strong></h4><br>
+        {% endif %}
 
         <p>Bid History: </p>
         <ul>
@@ -20,17 +30,30 @@
             <li>No bids yet.</li>
             {% endfor %}
         </ul>
+        <small>{{bid_count}} bid(s) so far.
+            {% if highest_bidder is None %}
+            No one bidded yet.
+            {% else %}
+            {{ highest_bidder }}'s bid is the current bid.</small>
+        {% endif %}
 
-        <p>Highest bid: {{ highest_bid }}. Highest bidder: {{ highest_bidder }}</p>
-        <h5>Place a Bid:</h5>
+        {% if user.is_authenticated %}
         <form method="post">
             {% csrf_token %}
-            {{ bid_form }}
-            <button type="submit" class="btn-sm btn-primary">Place Bid</button>
+            <div class="input-group mb-3">
+                {{ bid_form }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Place Bid</button>
+            <br><span class="badge rounded-pill text-bg-danger">{{ error_msg }}</span>
         </form>
+        {% else %}
+        <a class="nav-link badge rounded-pill text-bg-danger" href="{% url 'login' %}"><strong>sign in to
+                bid</strong></a>
+        {% endif %}
 
 
-        <h5 style="margin: 10px;"><strong>Details</strong></h5>
+        <br>
+        <h5><strong>Details</strong></h5>
         <ul>
             <li>
                 Listed by: {{item.Owner}}
@@ -48,16 +71,34 @@
         </ul>
     </div>
     <div>
+
+
+        {% if request.user.is_authenticated %}
+        {% if not item.in_watchlist %}
+        <div style="margin-bottom: 10px;">
+            <form action="{% url 'add_to_watchlist' item_id=item.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Add to Watchlist</button>
+            </form>
+        </div>
+        {% endif %}
+        {% endif %}
+
+
         {% if user.is_authenticated %}
         <form action="{% url 'item_details' item_id=item.id %}" method="post">
             {% csrf_token %}
-            {{ your_comment }}
-            <button type="submit" class="btn-sm btn-primary">Comment</button>
+            <div class="input-group mb-3">
+                {{ your_comment }}
+            </div>
+            <button type="submit" class="btn btn-success btn-sm ">Comment</button>
         </form>
         {% else %}
-        <a class="nav-link" href="{% url 'login' %}"><strong>sign in to comment</strong></a>
+        <a class="nav-link badge rounded-pill text-bg-danger" href="{% url 'login' %}"><strong>sign in to
+                comment</strong></a>
         {% endif %}
-        <h5 style="margin: 10px;"><strong>Comments:</strong></h5>
+        <br>
+        <h5><strong>Comments:</strong></h5>
         {% for comment in all_comments %}
         <p><strong>{{ comment.commentator.username }}</strong> : {{ comment.comment }}</p>
         {% endfor %}

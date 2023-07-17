@@ -2,9 +2,46 @@
 {% block body %}
 <h3>Watchlist</h3>
 
-TODO
-<form action="{% url 'watchlist' %}" method="post">
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+</ul>
+{% endif %}
 
-</form>
+
+<hr>
+{% for item in watchlist_items %}
+<div class="listings container-fluid card">
+    <div>
+        <img class="bd-placeholder-img card-img-left" height="150vh" src="{{item.listing.image}}">
+    </div>
+    <div>
+        <h6><a class="nav-link "
+                href="{% url 'item_details' item_id=item.listing.id %}"><strong>{{item.listing.name}}</strong></a>
+        </h6>
+
+        {% if item.listing.highest_bid is None %}
+        <h5><b>Price:</b> ₹&nbsp;{{item.listing.price}}<small><small> initial
+                    price</small></small></h5>
+        {% else %}
+        <h5><b>Price:</b> ₹&nbsp;{{item.listing.highest_bid}}</h5>
+        {% endif %}
+
+        <h5>{{item.listing.description}}</h5>
+        <h5><b>Category:</b> {{item.listing.category}}</h5>
+        <p><small>Created: {{item.listing.date_time}}</small>
+        <p>
+    </div>
+
+    <form action="{% url 'remove_from_watchlist' item_id=item.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Remove from Wishlist</button>
+    </form>
+
+</div>
+<hr><br>
+{% endfor %}
 
 {% endblock %}

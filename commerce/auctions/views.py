@@ -4,8 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
-from .models import User, AuctionListing, Category, Comments, Bids
+from .models import User, AuctionListing, Category, Comments, Bids, Watchlist
 from .forms import CommentForm, BidForm
 
 
@@ -83,11 +84,6 @@ def createListing(request):
         return render(request, "auctions/createListing.html", {'categories': categories})
 
 
-def watchlist(request):
-    #TODO
-    return render(request, "auctions/watchlist.html")
-
-
 def categories(request):
     context = {'categories':Category.objects.all()}
     return render(request, "auctions/categories.html",context)
@@ -108,12 +104,13 @@ def item_details(request, item_id):
     bids = Bids.objects.filter(listing=item).order_by('-amount')
     highest_bid = item.highest_bid
     highest_bidder = item.highest_bidder
+    error_msg=""
     if request.method == 'POST':
-        form = BidForm(request.POST)
-        if form.is_valid():
-            bid_amount = form.cleaned_data['amount']
-
-            if bid_amount > highest_bid:
+        bid_form = BidForm(request.POST)
+        if bid_form.is_valid():
+            bid_amount = bid_form.cleaned_data['amount']
+            
+            if (highest_bid is None or bid_amount > highest_bid) and bid_amount >= item.price:
                 # Update the highest bid and bidder
                 item.highest_bid = bid_amount
                 item.highest_bidder = request.user
@@ -125,8 +122,15 @@ def item_details(request, item_id):
 
                 # Refresh the page to show the updated bid information
                 return HttpResponseRedirect(request.path_info)
+            else:
+                if bid_amount < item.price:
+                    error_msg="Please bid as minimum as the opening price"
+                elif bid_amount < highest_bid:
+                    error_msg="Please bid more than the last highest bidder"
+
     else:
         bid_form = BidForm()
+        
 
     if request.method == "POST":
             comment = CommentForm(request.POST)
@@ -142,15 +146,43 @@ def item_details(request, item_id):
         'bids': bids,
         'highest_bid': highest_bid,
         'highest_bidder': highest_bidder,
-        'bid_form': bid_form
+        'bid_form': bid_form,
+        'bid_count':bids.count(),
+        'error_msg': error_msg,
+        'username': User.username
     }
     return render(request, 'auctions/item_details.html', context)
-
-# def bid(request):
-#     pass
 
 @login_required
 def save_comment(request, content, product):
     commentator = User.objects.get(username = request.user.username)
     comment = Comments(comment=content, commentator=commentator, product=product)
     comment.save()
+
+@login_required
+def watchlist(request):
+    watchlist_items = Watchlist.objects.filter(user=request.user)
+    return render(request, "auctions/watchlist.html", {"watchlist_items": watchlist_items})
+
+
+@login_required
+def add_to_watchlist(request, item_id):
+    listing = get_object_or_404(AuctionListing, pk=item_id)
+    watchlist, created = Watchlist.objects.get_or_create(user=request.user, listing=listing)
+    if created:
+        messages.info(request, 'Added to watchlist.')
+        # message = "Added to watchlist."
+    else:
+        messages.info(request, 'Already in watchlist.')
+        # message = "Already in watchlist."
+    # return render(request, "auctions/watchlist.html", {"message": message})
+    return redirect('watchlist')
+
+@login_required
+def remove_from_watchlist(request, item_id):
+    listing = get_object_or_404(AuctionListing, pk=item_id)
+    watchlist = Watchlist.objects.filter(user=request.user, listing=listing)
+    watchlist.delete()
+    # message = "Removed from watchlist."
+    return redirect('watchlist')
+    # return render(request, "auctions/watchlist.html", {"message": message})
