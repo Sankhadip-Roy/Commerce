@@ -52,6 +52,6 @@ class Comments(models.Model):
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, blank=True, null=True)
+    listing = models.ManyToManyField(AuctionListing, blank=True, null=True)
     def __str__(self):
         return f"{self.user.username} | {self.listing.name}"

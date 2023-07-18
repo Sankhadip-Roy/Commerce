@@ -23,16 +23,25 @@
         {% endif %}
 
         <p>Bid History: </p>
-        <ul>
+        <ul class="list-group list-group-flush">
             {% for bid in bids %}
-            <li>{{ bid.amount }} - {{ bid.bidder.username }}</li>
+            <li class="list-group-item d-flex justify-content-start align-items-center list-group-item-light">
+                {{ bid.bidder.username }}&nbsp;&nbsp;
+                <span class="badge bg-info rounded-pill"> {{ bid.amount }}</span>
+            </li>
             {% empty %}
-            <li>No bids yet.</li>
+            <button class="btn btn-dark" type="button" disabled>
+                <span class="spinner-border text-light spinner-border-sm" role="status" aria-hidden="true"></span>
+                No bids yet.
+            </button>
             {% endfor %}
-        </ul>
+        </ul><br>
+
         <small>{{bid_count}} bid(s) so far.
             {% if highest_bidder is None %}
             No one bidded yet.
+            {% elif highest_bidder == username %}
+            Your bid is the current bid.
             {% else %}
             {{ highest_bidder }}'s bid is the current bid.</small>
         {% endif %}
@@ -74,16 +83,13 @@
 
 
         {% if request.user.is_authenticated %}
-        {% if not item.in_watchlist %}
         <div style="margin-bottom: 10px;">
-            <form action="{% url 'add_to_watchlist' item_id=item.id %}" method="post">
+            <form action="{% url 'updatewatchlist' item.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Add to Watchlist</button>
+                <button type="submit" class="btn btn-primary btn-sm">{{ watchlist_btn }}</button>
             </form>
         </div>
         {% endif %}
-        {% endif %}
-
 
         {% if user.is_authenticated %}
         <form action="{% url 'item_details' item_id=item.id %}" method="post">

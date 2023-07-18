@@ -12,7 +12,5 @@ urlpatterns = [
     path("categories/<str:category_name>", views.products_by_category, name='products_by_category'),
     path("createListing", views.createListing, name="createListing"),
     path("watchlist", views.watchlist, name="watchlist"),
-    path("add-to-watchlist/<int:item_id>", views.add_to_watchlist, name="add_to_watchlist"),
-    path("remove-from-watchlist/<int:item_id>", views.remove_from_watchlist, name="remove_from_watchlist")
-
+    path("updatewatchlist/<int:item_id>", views.update_watchlist, name="updatewatchlist")
 ]
