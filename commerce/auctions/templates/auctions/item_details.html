@@ -15,11 +15,11 @@
     <div>
         <h5>{{item.description}}</h5>
 
-        {% if highest_bid is None %}
+        {% if item.highest_bid is None %}
         <h4><strong> ₹&nbsp;{{item.price}}</strong><small><small> initial
                     price</small></small></h4><br>
         {% else %}
-        <h4><strong> ₹&nbsp;{{highest_bid}}</strong></h4><br>
+        <h4><strong> ₹&nbsp;{{item.highest_bid}}</strong></h4><br>
         {% endif %}
 
         <p>Bid History: </p>
@@ -38,12 +38,12 @@
         </ul><br>
 
         <small>{{bid_count}} bid(s) so far.
-            {% if highest_bidder is None %}
+            {% if item.highest_bidder is None %}
             No one bidded yet.
-            {% elif highest_bidder == username %}
+            {% elif item.highest_bidder == username %}
             Your bid is the current bid.
             {% else %}
-            {{ highest_bidder }}'s bid is the current bid.</small>
+            {{ item.highest_bidder }}'s bid is the current bid.</small>
         {% endif %}
 
         {% if user.is_authenticated %}

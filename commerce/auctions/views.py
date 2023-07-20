@@ -1,17 +1,20 @@
+# from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+
 from .models import User, AuctionListing, Category, Comments, Bids, Watchlist
 from .forms import CommentForm, BidForm
-# from django.contrib import messages
 
 
 def index(request):
-    context = {'items':AuctionListing.objects.all()}
-    return render(request, "auctions/index.html", context)
+    return render(request, "auctions/index.html",{
+    'items':AuctionListing.objects.all(),
+    'header': "Active Listings"
+    })
 
 
 def login_view(request):
@@ -78,23 +81,24 @@ def createListing(request):
         product.save()
         return redirect('index')
     else:
-        categories = Category.objects.all()
-        return render(request, "auctions/createListing.html", {'categories': categories})
+        return render(request, "auctions/createListing.html", {'categories': Category.objects.all()})
 
 
 def categories(request):
-    context = {'categories':Category.objects.all()}
-    return render(request, "auctions/categories.html",context)
+    return render(request, "auctions/categories.html",{'categories':Category.objects.all()})
 
 
 def products_by_category(request, category_name):
     category = get_object_or_404(Category, categoryName=category_name)
     items=AuctionListing.objects.filter(category=category)
-    context = {
-        'category': category,
+    if(items.count() == 0):
+        header=f"Category: {category.categoryName}\n\nNo items available in this category."
+    else:
+        header= f"Category: {category.categoryName}"
+    return render(request, 'auctions/index.html', {
+        'header': header,
         'items': items
-    }
-    return render(request, 'auctions/products_by_category.html', context)
+    })
 
 
 def item_details(request, item_id):
@@ -102,8 +106,6 @@ def item_details(request, item_id):
 
     # bids implementation
     bids = Bids.objects.filter(listing=item).order_by('-amount')
-    highest_bid = item.highest_bid
-    highest_bidder = item.highest_bidder
     error_msg=""
     if request.method == 'POST':
         bid_form = BidForm(request.POST)
@@ -135,10 +137,6 @@ def item_details(request, item_id):
             comment = CommentForm(request.POST)
             if comment.is_valid():
                 save_comment(request, comment.cleaned_data['comment'], item)
-
-    your_comment = CommentForm()
-    all_comments = Comments.objects.filter(product = item)
-
     
     # watchlist implementation
     if request.user.is_authenticated:
@@ -158,20 +156,17 @@ def item_details(request, item_id):
     else:
         watchlist_status = "Null"
 
-    context = {
+    return render(request, 'auctions/item_details.html', {
         'item': item,
-        'your_comment' : your_comment,
-        'all_comments':all_comments,
+        'username': request.user,
         'bids': bids,
-        'highest_bid': highest_bid,
-        'highest_bidder': highest_bidder,
-        'bid_form': bid_form,
         'bid_count':bids.count(),
+        'bid_form': bid_form,
         'error_msg': error_msg,
         "watchlist_btn" : watchlist_status,
-        'username': request.user
-    }
-    return render(request, 'auctions/item_details.html', context)
+        'your_comment' : CommentForm(),
+        'all_comments':Comments.objects.filter(product = item)
+    })
 
 
 @login_required
@@ -186,24 +181,24 @@ def watchlist(request):
     try:
         watching_items_names = Watchlist.objects.get(user=request.user) 
     except Watchlist.DoesNotExist:
-       return render(request, "auctions/watchlist.html", {"items": None})
+        return render(request, "auctions/watchlist.html", {"items": None})
 
     watching_items = watching_items_names.listing.all()
-    return render(request, "auctions/watchlist.html", {
-        "items" : watching_items
+    return render(request, "auctions/index.html", {
+        'items' : watching_items,
+        'header': "Watchlist"
     })
 
 
 @login_required
 def update_watchlist(request, item_id):
-    currently_loggedin = User.objects.get(username=request.user.username)
     target_product = AuctionListing.objects.get(id=item_id)
     
     #this is to check whether there a object exists according to the username
     try:
-        watching_items_names = Watchlist.objects.get(user=currently_loggedin) #filtering the account to get the products
+        watching_items_names = Watchlist.objects.get(user=request.user) #filtering the account to get the products
     except Watchlist.DoesNotExist:
-        watchlist_obj = Watchlist.objects.create(user=currently_loggedin)
+        watchlist_obj = Watchlist.objects.create(user=request.user)
         watchlist_obj.listing.add(target_product)
         watchlist_obj.save()
         return redirect('item_details', item_id)
