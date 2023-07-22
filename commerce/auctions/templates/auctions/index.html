@@ -1,9 +1,12 @@
 {% extends "auctions/layout.html" %}
-
+{% block title %}
+{{title}}
+{% endblock %}
 {% block body %}
-<h2 style="white-space: pre">{{header}}</h2><br>
+<h2 style="white-space: pre" class="h4 pb-2 mb-4 text-info border-bottom border-info">{{header}}</h2>
 {% for item in items %}
-<div class=" listings container-fluid card">
+<div
+    class=" listings container-fluid card border border-info p-2 mb-2 border-opacity-50 p-3 mb-2 bg-info-subtle text-emphasis-info">
     <div>
         <img class="bd-placeholder-img card-img-left" height="150vh" src="{{item.image}}">
     </div>

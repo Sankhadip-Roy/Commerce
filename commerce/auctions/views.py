@@ -11,9 +11,11 @@ from .forms import CommentForm, BidForm
 
 
 def index(request):
+    items=AuctionListing.objects.all()
     return render(request, "auctions/index.html",{
-    'items':AuctionListing.objects.all(),
-    'header': "Active Listings"
+    'items':items,
+    'header': f"Active Listings [{items.count()}]",
+    'title': "Auction"
     })
 
 
@@ -97,7 +99,8 @@ def products_by_category(request, category_name):
         header= f"Category: {category.categoryName}"
     return render(request, 'auctions/index.html', {
         'header': header,
-        'items': items
+        'items': items,
+        'title': f"{category.categoryName}"
     })
 
 
@@ -178,15 +181,25 @@ def save_comment(request, content, product):
 
 @login_required
 def watchlist(request):
+    title = 'Watchlist'
     try:
         watching_items_names = Watchlist.objects.get(user=request.user) 
     except Watchlist.DoesNotExist:
-        return render(request, "auctions/watchlist.html", {"items": None})
+        return render(request, "auctions/index.html", {
+        "items": None,
+        'header': f"Watchlist\n\n{request.user}, you can add some items to watchlist for future",
+        'title': title
+        })
 
     watching_items = watching_items_names.listing.all()
+    if(watching_items.count() == 0):
+        header=f"Watchlist\n\n{request.user} there are no items in your watchlist"
+    else:
+        header= f"Watchlist [{watching_items.count()}]"
     return render(request, "auctions/index.html", {
         'items' : watching_items,
-        'header': "Watchlist"
+        'header': header,
+        'title': title
     })
 
 
@@ -213,3 +226,10 @@ def update_watchlist(request, item_id):
         watching_items_names.listing.add(target_product)
         watching_items_names.save()
         return redirect('item_details', item_id)
+
+@login_required
+def closeBid(request, item_id):
+    item = AuctionListing.objects.get(id = item_id)
+    item.isActive=False
+    item.save()
+    return redirect('item_details', item_id)

@@ -1,12 +1,16 @@
 {% extends "auctions/layout.html" %}
-
+{% block title %}
+Categories
+{% endblock %}
 {% block body %}
-<h3>Categories</h3><br>
-<ol>
-    {% for category in categories %}
-    <li><a
-            href="{% url 'products_by_category' category_name=category.categoryName|slugify %}">{{category.categoryName}}</a>
-    </li>
-    {% endfor %}
-</ol>
+<h3 class="h4 pb-2 mb-4 text-info border-bottom border-info">Categories</h3>
+<div class="list-group">
+    <ol>
+        {% for category in categories %}
+        <li><a class="list-group-item list-group-item-action list-group-item-info"
+                href="{% url 'products_by_category' category_name=category.categoryName|slugify %}">{{category.categoryName}}</a>
+        </li>
+        {% endfor %}
+    </ol>
+</div>
 {% endblock %}

@@ -1,13 +1,38 @@
 {% extends 'auctions/layout.html' %}
-
+{% block title %}
+{{item.name}}
+{% endblock %}
 {% block body %}
-<h3 class="text-left">Listing: {{item.name}}</h3>
-{% if item.isActive %}
-<span class="badge text-bg-success">active</span>
-{% else %}
-<span class="badge text-bg-warning">closed</span>
-{% endif %}
-<hr>
+
+<div class="h4 pb-2 mb-4 text-info border-bottom border-info">
+    <small>
+        <h3>Listing: {{item.name}}</h3>
+        <small>
+            {% if item.isActive %}
+            <span class="badge text-bg-success">active</span>
+
+            {% if user.is_authenticated and username == item.Owner %}
+            <form action="{% url 'closebid' item.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-info btn-sm ">close bid</button>
+            </form>
+            {% endif %}
+
+            {% else %}
+
+            {% if item.highest_bidder == username %}
+            <span class="badge text-bg-warning">closed and you are the winner of this bid</span>
+            {% elif item.highest_bidder == None %}
+            <span class="badge text-bg-warning">closed and no one have bidded in this listing</span>
+            {% else %}
+            <span class="badge text-bg-warning">closed and {{item.highest_bidder}} is the winner of this bid</span>
+            {% endif %}
+
+            {% endif %}
+        </small>
+    </small>
+</div>
+
 <div class="single_item container-fluid">
     <div>
         <img height="250px" src="{{item.image}}">
@@ -46,7 +71,7 @@
             {{ item.highest_bidder }}'s bid is the current bid.</small>
         {% endif %}
 
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and item.isActive %}
         <form method="post">
             {% csrf_token %}
             <div class="input-group mb-3">
@@ -56,8 +81,14 @@
             <br><span class="badge rounded-pill text-bg-danger">{{ error_msg }}</span>
         </form>
         {% else %}
+
+        {% if not item.isactive %}
+        <span class="badge rounded-pill text-bg-warning"><strong>bidding is closed</strong></span>
+        {% else %}
         <a class="nav-link badge rounded-pill text-bg-danger" href="{% url 'login' %}"><strong>sign in to
                 bid</strong></a>
+        {% endif %}
+
         {% endif %}
 
 
