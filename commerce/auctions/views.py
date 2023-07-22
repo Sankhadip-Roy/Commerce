@@ -115,7 +115,7 @@ def item_details(request, item_id):
         if bid_form.is_valid():
             bid_amount = bid_form.cleaned_data['amount']
             
-            if (highest_bid is None or bid_amount > highest_bid) and bid_amount >= item.price:
+            if (item.highest_bid is None or bid_amount > item.highest_bid) and bid_amount >= item.price:
                 # Update the highest bid and bidder
                 item.highest_bid = bid_amount
                 item.highest_bidder = request.user
@@ -130,7 +130,7 @@ def item_details(request, item_id):
             else:
                 if bid_amount < item.price:
                     error_msg="Please bid as minimum as the opening price"
-                elif bid_amount < highest_bid:
+                elif bid_amount < item.highest_bid:
                     error_msg="Please bid more than the last highest bidder"
     else:
         bid_form = BidForm()
