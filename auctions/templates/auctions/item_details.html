@@ -71,7 +71,10 @@
             {{ item.highest_bidder }}'s bid is the current bid.</small>
         {% endif %}
 
-        {% if user.is_authenticated and item.isActive %}
+
+        {% if not item.isActive %}
+        <span class="badge rounded-pill text-bg-warning"><strong>bidding is closed</strong></span>
+        {% elif user.is_authenticated and item.isActive %}
         <form method="post">
             {% csrf_token %}
             <div class="input-group mb-3">
@@ -80,17 +83,10 @@
             <button type="submit" class="btn btn-primary btn-sm">Place Bid</button>
             <br><span class="badge rounded-pill text-bg-danger">{{ error_msg }}</span>
         </form>
-        {% else %}
-
-        {% if not item.isactive %}
-        <span class="badge rounded-pill text-bg-warning"><strong>bidding is closed</strong></span>
-        {% else %}
+        {% elif not user.is_authenticated %}
         <a class="nav-link badge rounded-pill text-bg-danger" href="{% url 'login' %}"><strong>sign in to
                 bid</strong></a>
         {% endif %}
-
-        {% endif %}
-
 
         <br>
         <h5><strong>Details</strong></h5>
