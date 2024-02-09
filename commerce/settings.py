@@ -25,7 +25,8 @@ SECRET_KEY = '6ps8j!crjgrxt34cqbqn7x&b3y%(fny8k8nh21+qa)%ws3fh!q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['commerce-sankha.onrender.com']
+ALLOWED_HOSTS = ['commerce-sankha.onrender.com','0.0.0.0']
+CSRF_TRUSTED_ORIGINS = ["https://commerce-sankha.onrender.com"]
 
 
 # Application definition
@@ -119,4 +120,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = './auctions/static/'
+STATIC_URL = 'auctions/static/'

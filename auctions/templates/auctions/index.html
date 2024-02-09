@@ -25,6 +25,10 @@
         <h5>{{item.description}}</h5>
         <p><small>Created: {{item.date_time}}</small>
         <p>
+            {% if not item.isActive %}
+        <p class="badge text-bg-danger"><small>Bidding is closed</small>
+        <p>
+            {% endif %}
     </div>
 </div><br>
 {% endfor %}
