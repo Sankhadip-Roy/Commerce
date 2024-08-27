@@ -3,33 +3,31 @@
 {{title}}
 {% endblock %}
 {% block body %}
-<h2 style="white-space: pre" class="h4 pb-2 mb-4 text-info border-bottom border-info">{{header}}</h2>
-{% for item in items %}
-<div
-    class=" listings container-fluid card border border-info p-2 mb-2 border-opacity-50 p-3 mb-2 bg-info-subtle text-emphasis-info">
-    <div>
-        <img class="bd-placeholder-img card-img-left" height="150vh" src="{{item.image}}">
-    </div>
-    <div>
-        <h6><a class="nav-link stretched-link"
-                href="{% url 'item_details' item_id=item.id %}"><strong>{{item.name}}</strong></a>
-        </h6>
-
-        {% if item.highest_bid is None %}
-        <h5><b>Price:</b> ₹&nbsp;{{item.price}}<small><small> initial
-                    price</small></small></h5>
-        {% else %}
-        <h5><b>Price:</b> ₹&nbsp;{{item.highest_bid}}</h5>
-        {% endif %}
-
-        <h5>{{item.description}}</h5>
-        <p><small>Created: {{item.date_time}}</small>
-        <p>
+<h2 class="text-2xl font-semibold text-gray-800 border-b-2 border-blue-500 pb-2 mb-4">{{header}}</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for item in items %}
+    <a href="{% url 'item_details' item_id=item.id %}"
+        class="block bg-white shadow-md rounded-lg overflow-hidden transform transition-transform hover:scale-105">
+        <div class="h-48 overflow-hidden">
+            <img class="w-full h-full object-cover" src="{{item.image}}" alt="{{item.name}}">
+        </div>
+        <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-700">
+                {{item.name}}
+            </h3>
+            <div class="text-sm text-gray-500 mt-1">
+                <p><strong>Price:</strong> ₹ {{item.highest_bid|default:item.price}}
+                    <small>{{item.highest_bid|yesno:"(current bid),(initial price)"}}</small>
+                </p>
+            </div>
+            <p class="text-sm text-gray-600 mt-2">{{item.description}}</p>
+            <p class="text-xs text-gray-400 mt-4">{{item.date_time|date:"F j, Y, g:i a"}}</p>
             {% if not item.isActive %}
-        <p class="badge text-bg-danger"><small>Bidding is closed</small>
-        <p>
+            <span class="inline-block mt-2 px-3 py-1 bg-red-200 text-red-800 rounded-full text-xs">Bidding is
+                closed</span>
             {% endif %}
-    </div>
-</div><br>
-{% endfor %}
+        </div>
+    </a>
+    {% endfor %}
+</div>
 {% endblock %}

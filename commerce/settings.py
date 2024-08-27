@@ -25,8 +25,8 @@ SECRET_KEY = '6ps8j!crjgrxt34cqbqn7x&b3y%(fny8k8nh21+qa)%ws3fh!q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['commerce-sankha.onrender.com','0.0.0.0']
-CSRF_TRUSTED_ORIGINS = ["https://commerce-sankha.onrender.com"]
+ALLOWED_HOSTS = ['app3-serveit.debsen.co','127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://app3-serveit.debsen.co','http://127.0.0.1']
 
 
 # Application definition

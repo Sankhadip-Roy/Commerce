@@ -4,23 +4,40 @@ Login
 {% endblock %}
 {% block body %}
 
-<h3 class="h4 pb-2 mb-4 text-info border-bottom border-info">Login</h3>
+<div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <h3 class="text-2xl font-semibold text-gray-800 border-b-2 border-blue-500 pb-4 mb-4">Login</h3>
 
-{% if message %}
-<div>{{ message }}</div>
-{% endif %}
+    {% if message %}
+    <div class="mb-4 text-red-600">
+        {{ message }}
+    </div>
+    {% endif %}
 
-<form action="{% url 'login' %}" method="post">
-    {% csrf_token %}
-    <div class="input-group mb-3">
-        <input autofocus class="form-control" type="text" name="username" placeholder="Username">
-    </div>
-    <div class="input-group mb-3">
-        <input class="form-control" type="password" name="password" placeholder="Password">
-    </div>
-    <input class="btn btn-primary" type="submit" value="Login">
-</form>
-<br>
-Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+    <form action="{% url 'login' %}" method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+            <input id="username"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                type="text" name="username" placeholder="Username" required autofocus>
+        </div>
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input id="password"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                type="password" name="password" placeholder="Password" required>
+        </div>
+        <div>
+            <input
+                class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 cursor-pointer"
+                type="submit" value="Login">
+        </div>
+    </form>
+
+    <p class="mt-6 text-center text-sm text-gray-600">
+        Don't have an account?
+        <a href="{% url 'register' %}" class="text-blue-500 hover:text-blue-700">Register here.</a>
+    </p>
+</div>
 
 {% endblock %}

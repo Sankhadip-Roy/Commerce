@@ -1,36 +1,59 @@
 {% extends "auctions/layout.html" %}
 {% block title %}
-New listing
+New Listing
 {% endblock %}
 {% block body %}
-<h3 class="h4 pb-2 mb-4 text-info border-bottom border-info">List your item</h3>
 
-<form action="{% url 'createListing' %}" method="post">
-    {% csrf_token %}
-    <div class="input-group mb-3">
-        <input autofocus class="form-control" type="text" id="id_name" name="name" placeholder="name of the item"
-            required>
-    </div>
-    <div class="input-group mb-3">
-        <input class="form-control" type="number" id="id_price" name="price" placeholder="starting bid" required>
-    </div>
-    <div class="input-group mb-3">
-        <textarea id="id_description" name="description" class="form-control" placeholder="Description"
-            required></textarea>
-    </div>
-    <div class="input-group mb-3">
-        <input class="form-control" id="id_imgurl" type="text" name="image" placeholder="url of the item image"
-            required>
-    </div>
-    <div class="input-group mb-3">
-        <select class="form-control" name="category" id="id_category" placeholder="category">
-            <option disabled selected value="">Category</option>
-            {% for category in categories %}
-            <option value="{{ category.id }}">{{ category.categoryName }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-</form>
+<div class="max-w-lg mx-auto mt-10 p-8 bg-gray-50 shadow-lg rounded-lg">
+    <h3 class="text-2xl font-bold text-gray-800 mb-6">List Your Item</h3>
+
+    <form action="{% url 'createListing' %}" method="post" class="space-y-6">
+        {% csrf_token %}
+
+        <div>
+            <label for="id_name" class="block text-sm font-medium text-gray-700">Item Name</label>
+            <input id="id_name" name="name" type="text" placeholder="Name of the item"
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required>
+        </div>
+
+        <div>
+            <label for="id_price" class="block text-sm font-medium text-gray-700">Starting Bid</label>
+            <input id="id_price" name="price" type="number" placeholder="Starting bid"
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required>
+        </div>
+
+        <div>
+            <label for="id_description" class="block text-sm font-medium text-gray-700">Description</label>
+            <textarea id="id_description" name="description" placeholder="Description"
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                rows="4" required></textarea>
+        </div>
+
+        <div>
+            <label for="id_imgurl" class="block text-sm font-medium text-gray-700">Image URL</label>
+            <input id="id_imgurl" name="image" type="text" placeholder="URL of the item image"
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required>
+        </div>
+
+        <div>
+            <label for="id_category" class="block text-sm font-medium text-gray-700">Category</label>
+            <select id="id_category" name="category"
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required>
+                <option disabled selected value="">Select a category</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.categoryName }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit"
+            class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Create
+            Listing</button>
+    </form>
+</div>
 
 {% endblock %}
