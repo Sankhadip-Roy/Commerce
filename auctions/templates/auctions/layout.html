@@ -9,51 +9,67 @@
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
 </head>
 
-<body>
+<body class="bg-gray-100 text-gray-800">
 
-    <nav>
-        <ul class="nav navbar sticky-top navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <h3 class="navbar-brand">{% block title %}Auctions {% endblock %}<span class="badge bg-secondary">
-
-                        {% if user.is_authenticated %}
-                        Signed in as {{ user.username }}
-                        {% else %}
-                        Not signed in
-                        {% endif %}
-
-                    </span></h3>
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h3 class="text-xl font-semibold">
+                {% block title %}Auctions{% endblock %}
+                <span class="badge bg-secondary text-sm ml-2">
+                    {% if user.is_authenticated %}
+                    Signed in as {{ user.username }}
+                    {% else %}
+                    Not signed in
+                    {% endif %}
+                </span>
+            </h3>
+            <ul class="flex space-x-4">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                    <a class="nav-link text-lg text-gray-700 px-3 py-2 rounded-md transition-colors duration-300 ease-in-out hover:bg-blue-100 hover:text-blue-600"
+                        href="{% url 'index' %}">Active Listings</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+                    <a class="nav-link text-lg text-gray-700 px-3 py-2 rounded-md transition-colors duration-300 ease-in-out hover:bg-blue-100 hover:text-blue-600"
+                        href="{% url 'categories' %}">Categories</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
+                    <a class="nav-link text-lg text-gray-700 px-3 py-2 rounded-md transition-colors duration-300 ease-in-out hover:bg-blue-100 hover:text-blue-600"
+                        href="{% url 'watchlist' %}">Watchlist</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'createListing' %}">Create Listing</a>
+                    <a class="nav-link text-lg text-gray-700 px-3 py-2 rounded-md transition-colors duration-300 ease-in-out hover:bg-blue-100 hover:text-blue-600"
+                        href="{% url 'createListing' %}">Create Listing</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    <a class="nav-link text-lg text-gray-700 px-3 py-2 rounded-md transition-colors duration-300 ease-in-out hover:bg-red-100 hover:text-red-600"
+                        href="{% url 'logout' %}">Log Out</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    <a class="nav-link text-lg text-gray-700 px-3 py-2 rounded-md transition-colors duration-300 ease-in-out hover:bg-green-100 hover:text-green-600"
+                        href="{% url 'login' %}">Log In</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    <a class="nav-link text-lg text-gray-700 px-3 py-2 rounded-md transition-colors duration-300 ease-in-out hover:bg-green-100 hover:text-green-600"
+                        href="{% url 'register' %}">Register</a>
                 </li>
                 {% endif %}
-            </div>
-        </ul>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
         {% block body %}
         {% endblock %}
+    </main>
+
+    <footer class="bg-white text-center py-4 mt-8 shadow-inner">
+        <p class="text-sm text-gray-500">&copy; 2024 Auctions. All rights reserved.</p>
+    </footer>
+
 </body>
 
 </html>
